@@ -19,7 +19,7 @@ resource "aws_subnet" "stc-subnet_01" {
 
 resource "aws_subnet" "stc-subnet_02" {
   vpc_id     = aws_vpc.str-vpc.id
-  cidr_block = "10.1.1.0/24"
+  cidr_block = "10.1.2.0/24"
   availability_zone = "us-east-1b"
   map_public_ip_on_launch = "true"
   tags = {
@@ -82,14 +82,17 @@ resource "aws_security_group" "allow_ssh" {
 }
 
 resource "aws_instance" "myinstance01" {
-  ami           = "ami-079db87dc4c10ac91"
+
+for_each = toset(["Jenkins_Master", "Jenkins_client", "Ansible"])
+  ami           = "ami-0c7217cdde317cfec"
   subnet_id = aws_subnet.stc-subnet_01.id
   instance_type = "t2.micro"
   key_name = "old-lap"
   vpc_security_group_ids = [ aws_security_group.allow_ssh.id ]
-  tags = {
-    Name = "HelloWorld"
-  }
+  
+ tags = {
+    Name = each.key
+ } 
 }
 
 
