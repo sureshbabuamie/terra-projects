@@ -56,17 +56,26 @@ resource "aws_route_table_association" "str-route-association_2" {
   subnet_id = aws_subnet.stc-subnet_02.id
 }
 
-resource "aws_security_group" "allow_ssh" {
-  name        = "allow_ssh"
-  description = "Allow ssh"
+
+resource "aws_security_group" "allow_ports" {
+  name        = "ssh"
+  description = "ssh"
   vpc_id = aws_vpc.str-vpc.id
   ingress {
-    description      = "allow ssh"
+    description      = "ssh"
     from_port        = 22
     to_port          = 22
     protocol         = "tcp"
     cidr_blocks      = ["0.0.0.0/0"]
-  
+  }
+    
+  ingress {
+    description      = "http"
+    from_port        = 8080
+    to_port          = 8080
+    protocol         = "tcp"
+    cidr_blocks      = ["0.0.0.0/0"]
+
   }
   egress {
     from_port        = 0
@@ -77,9 +86,10 @@ resource "aws_security_group" "allow_ssh" {
   }
 
   tags = {
-    Name = "allow_tls"
+    Name = "allow_ports"
   }
 }
+
 
 resource "aws_instance" "myinstance01" {
 
@@ -88,7 +98,7 @@ for_each = toset(["Jenkins_Master", "Jenkins_client", "Ansible"])
   subnet_id = aws_subnet.stc-subnet_01.id
   instance_type = "t2.micro"
   key_name = "old-lap"
-  vpc_security_group_ids = [ aws_security_group.allow_ssh.id ]
+  vpc_security_group_ids = [ aws_security_group.allow_ports.id ]
   
  tags = {
     Name = each.key
