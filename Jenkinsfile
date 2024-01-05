@@ -5,8 +5,8 @@ pipeline {
         }
     }
     environment {
-        PATH = '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin'
-        PATH+EXTRA = '/opt/apache-maven-3.9.6/bin'
+        PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin'
+        PATH+EXTRA='/opt/apache-maven-3.9.6/bin'
     }
     stages {
         stage('Clone-git-repo') {
